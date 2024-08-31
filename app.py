@@ -6,7 +6,7 @@ import os
 from matplotlib.colors import LinearSegmentedColormap
 from io import BytesIO
 from PIL import Image
-
+# ahni trty
 app = Flask(__name__)
 CORS(app)
 
