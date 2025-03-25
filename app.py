@@ -2,11 +2,9 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import cv2
 import numpy as np
-import os
 from matplotlib.colors import LinearSegmentedColormap
 from io import BytesIO
-from PIL import Image
-# ahni trty
+
 app = Flask(__name__)
 CORS(app)
 
@@ -30,7 +28,7 @@ def blend_images(image1, image2, alpha=0.5, beta=0.5, gamma=0):
     return cv2.addWeighted(image1, alpha, image2, beta, gamma)
 
 def process_sar_image(image):
-    sar_image = cv2.imdecode(np.fromstring(image.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
+    sar_image = cv2.imdecode(np.frombuffer(image.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
     sar_image_equalized = enhance_contrast(sar_image)
     custom_cmap = create_custom_colormap()
     normalized_sar_image = normalize_image(sar_image_equalized)
@@ -45,7 +43,6 @@ def upload_image():
     processed_image = process_sar_image(file)
     _, img_encoded = cv2.imencode('.png', processed_image)
     return send_file(BytesIO(img_encoded.tobytes()), mimetype='image/png')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
